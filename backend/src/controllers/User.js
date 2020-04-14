@@ -33,6 +33,14 @@ class UserController {
 
     }
 
+    /*fetch_user(props,res) {
+        db.query("SELECT * FROM bn_users WHERE username=?",
+        [props.username], (err, results) => {
+            if (err) return res.status(400).send();
+            if (results.length == 0) return res.status(400).send();
+        })
+    }*/
+
     login(props, res) {
 
         const crypto = {
@@ -55,6 +63,8 @@ class UserController {
                             });
 
                             return res.json({
+                                username,
+                                picture,
                                 token
                             });
                         }
@@ -98,9 +108,8 @@ class UserController {
     }
 
     publish_fetch(props, res, req) {
-        db.query(`SELECT * FROM ${props.username}_posts`, (error, results) => {
+        db.query(`SELECT * FROM ${props.username}_posts ORDER BY id DESC`, (error, results) => {
             if (error) return res.status(400).send();
-            if (results.length == 0) return res.status(400).send();
 
             return res.json(results)
         })
