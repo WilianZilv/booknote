@@ -14,7 +14,7 @@ class UserController {
             hash: bcryptjs.hashSync(props.password, this.salt)
         }
 
-        db.query("INSERT INTO bn_users(username,password) VALUES (?,?)",
+        db.query("INSERT INTO bn_users(username,password,followers,following,pubs) VALUES (?,?,0,0,0)",
             [props.username, crypto.hash],
             (err) => {
                 if (err) {
@@ -22,7 +22,7 @@ class UserController {
                 }
             })
 
-        db.query(`CREATE TABLE ${props.username}_posts(id int primary key auto_increment, likes int,subject varchar(100), content varchar(1024))`,
+        db.query(`CREATE TABLE ${props.username}_posts(id int primary key auto_increment, likes int,subject varchar(100), content varchar(10000))`,
             (err) => {
                 if (err) {
                     return res.status(400).send()
@@ -31,15 +31,17 @@ class UserController {
                 }
             })
 
+
     }
 
-    /*fetch_user(props,res) {
-        db.query("SELECT * FROM bn_users WHERE username=?",
-        [props.username], (err, results) => {
-            if (err) return res.status(400).send();
-            if (results.length == 0) return res.status(400).send();
-        })
-    }*/
+    fetch_user(props, res) {
+        db.query("SELECT username,picture,followers,following,pubs FROM bn_users WHERE username=?",
+            [props.username], (err, results) => {
+                if (err) return res.status(400).send(err);
+                if (results.length == 0) return res.status(400).send();
+                return res.json(results[0])
+            })
+    }
 
     login(props, res) {
 

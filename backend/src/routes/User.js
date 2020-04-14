@@ -17,6 +17,10 @@ user.get(`${prefix}publish/:username`, async (req, res) => {
     return UserController.publish_fetch(req.params, res, req);
 })
 
+user.get(`${prefix}profile/:username`, async (req, res) => {
+    return UserController.fetch_user(req.params, res, req);
+})
+
 user.post(`${prefix}publish`, MiddlewareAuth, async (req, res) => {
     if (await ValidatorResume.isValid(req.body)) {
         return UserController.publish(req.body, res, req);
