@@ -4,6 +4,8 @@ import ValidatorUser from '../validator/User'
 
 import UserController from '../controllers/User'
 
+import MiddlewareAuth from '../middlewares/auth'
+
 const route = {
     user: new Router(),
     prefix: '/user/'
