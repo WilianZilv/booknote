@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -66,17 +66,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function Login({history}) {
+export default function Login({ history }) {
 
-  const [username,setUserName] = useState('');
-  const [password,setPassword] = useState('');
+  const [username, setUserName] = useState('');
+  const [password, setPassword] = useState('');
 
-  const handleLogin = async() => {
+  const handleLogin = async () => {
     const response = await api.post('/user/login', {
       username,
       password
     }).then((e) => {
-      localStorage.setItem("token_auth",JSON.stringify(e.data));
+      localStorage.setItem("token_auth", JSON.stringify(e.data));
       history.push('/')
       notification.success({
         message: "Seja bem vindo a plataforma :)"
@@ -87,7 +87,7 @@ export default function Login({history}) {
       })
     })
   }
-  
+
 
   const classes = useStyles();
 
@@ -106,7 +106,7 @@ export default function Login({history}) {
           <Typography component="h1" variant="h5">
             Uma nova forma de resumos!
           </Typography>
-          <form className={classes.form} noValidate  onSubmit={(e) => {
+          <form className={classes.form} noValidate onSubmit={(e) => {
             e.preventDefault()
             handleLogin();
           }}>

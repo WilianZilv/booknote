@@ -5,6 +5,8 @@ import IconButton from '@material-ui/core/IconButton'
 import TextField from '@material-ui/core/TextField'
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
+
+
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
@@ -24,15 +26,16 @@ const Publish = ({ history }) => {
 
     const token = localStorage.getItem("token_auth");
 
-
+    
 
     if (!token) {
-        history.push('/login')
+        history.push('/Login')
     }
 
 
     const user = JSON.parse(token);
     const [content, setContent] = useState('');
+
 
     const handlePublish = async () => {
         console.log(content)
@@ -72,7 +75,7 @@ const Publish = ({ history }) => {
                             marginLeft: '30px',
                         }}
                     >
-                       <AccountCircle onClick={() => {
+                        <AccountCircle onClick={() => {
                             history.push('/profile/' + user.username);
                         }} />
                     </IconButton>
@@ -86,8 +89,8 @@ const Publish = ({ history }) => {
             </Header>
             <Content style={{
                 display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
+                height:'80vh',
+                justifyContent:'center'
             }}>
 
                 <Editor
@@ -95,22 +98,22 @@ const Publish = ({ history }) => {
                     wrapperClassName="wrapperClassName"
                     editorClassName="editorClassName"
                     style={{
-                        height: '500px'
+                        height:'50px'
                     }}
                     onChange={(e) => {
                         console.log(e)
                         var conteudo = '';
                         e.blocks.map((content) => {
 
-                                conteudo = conteudo + `<p>${content.text}</p><br>`
-                            
+                            conteudo = conteudo + `<p>${content.text}</p><br>`
+
                         })
                         setContent(conteudo);
 
                     }}
                 />
 
-                <Card title="Opa finalizou?" id="userCard" style={{ height: '150px', width: '300px', marginTop: '50px', }}>
+                <Card title="Opa finalizou?" id="userCard" style={{ height: '150px', width: '300px', marginTop: '10px',marginRight:'20px',transition:'all 0.5s' }}>
                     <Button id="btnPublish" style={{ marginLeft: '70px' }} type="primary" onClick={() => {
                         handlePublish();
                     }}>

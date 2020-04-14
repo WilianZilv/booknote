@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import 'antd/dist/antd.css'
 
@@ -8,6 +8,8 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 
 import { Layout, Typography, Button, Card, Menu } from 'antd';
 import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
+
+import api from '../../services/api'
 
 import './main.css'
 const { SubMenu } = Menu;
@@ -21,14 +23,32 @@ const Dashboard = ({ history }) => {
     const token = localStorage.getItem("token_auth");
 
 
-
-    if (!token) {
-        history.push('/login')
-    }
-
-
     const user = JSON.parse(token);
     console.log(user)
+
+    const [update, setUpdate] = useState(true);
+    const [Profile, SetProfile] = useState({});
+
+    if (!token) {
+        history.push('/Login')
+    }
+
+    const fetchProfile = async () => {
+        const response = await api.get(`/user/profile/${user.username}`).then((e) => {
+            console.log("kkk")
+            console.log(e.data);
+            SetProfile(e.data);
+        })
+    }
+
+    useEffect(() => {
+        if (update) {
+            fetchProfile()
+            setUpdate(false);
+        }
+    }, [update])
+
+
 
     return (
         <Layout>
@@ -90,7 +110,7 @@ const Dashboard = ({ history }) => {
                 </Menu>
                 <Card title={user.username} id="userCard" style={{ height: '150px', width: '300px', marginTop: '50px', }}>
                     <img src="" />
-                    <p>0 seguidores</p>
+                    <p>{Profile.followers} seguidores</p>
                 </Card>
             </Content>
         </Layout>
