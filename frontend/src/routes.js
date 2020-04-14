@@ -5,11 +5,20 @@ import {
     Switch
 } from 'react-router-dom'
 
+import Dashboard from './pages/Main/Dashboard'
+import Publish from './pages/Main/Publish'
+import Login from './pages/Login'
+import Profile from './pages/Main/Profile'
+
+
 const Routes = () => {
-    return(
+    return (
         <BrowserRouter>
             <Switch>
-                <Route path="/" exact component={ () => <h1>oi</h1>}/>
+                <Route path="/profile/:username" exact component={Profile} />
+                <Route path="/" exact component={Dashboard} />
+                <Route path="/publish" exact component={Publish} />
+                <Route path="/login" exact component={Login} />
             </Switch>
         </BrowserRouter>
     )
