@@ -2,7 +2,6 @@ import db from '../db'
 import jwt from 'jsonwebtoken'
 const bcryptjs = require('bcryptjs')
 
-
 class UserController {
 
     constructor() {
@@ -18,9 +17,20 @@ class UserController {
         db.query("INSERT INTO bn_users(username,password) VALUES (?,?)",
             [props.username, crypto.hash],
             (err) => {
-                if (err) return res.status(400).send();
-                return res.send()
+                if (err) {
+                    return res.status(400).send()
+                }
             })
+
+        db.query(`CREATE TABLE ${props.username}_posts(id int primary key auto_increment, likes int,subject varchar(100), content varchar(1024))`,
+            (err) => {
+                if (err) {
+                    return res.status(400).send()
+                } else {
+                    res.send()
+                }
+            })
+
     }
 
     login(props, res) {
@@ -41,7 +51,7 @@ class UserController {
                             const { username, picture } = results[0];
 
                             let token = jwt.sign({ username, picture }, this.privateKey, {
-                                expiresIn: 60
+                                expiresIn: 86400
                             });
 
                             return res.json({
@@ -51,6 +61,49 @@ class UserController {
                     });
                 });
         }
+    }
+
+    publish(props, res, req) {
+
+        const token = req.headers.auth;
+        const object = jwt.decode(token);
+
+        const { username } = object;
+
+        db.query(`INSERT INTO ${username}_posts(likes,subject,content) VALUES (?,?,?)`, [
+            0,
+            props.subject,
+            props.content
+        ], (error) => {
+            if (error) return res.status(400).send();
+            return res.send()
+        })
+
+    }
+
+    publish_delete(props, res, req) {
+
+        const token = req.headers.auth;
+        const object = jwt.decode(token);
+
+        const { username } = object;
+
+        db.query(`DELETE FROM ${username}_posts WHERE id=?`, [
+            props.id,
+        ], (error) => {
+            if (error) return res.status(400).send();
+            return res.send()
+        })
+
+    }
+
+    publish_fetch(props, res, req) {
+        db.query(`SELECT * FROM ${props.username}_posts`, (error, results) => {
+            if (error) return res.status(400).send();
+            if (results.length == 0) return res.status(400).send();
+
+            return res.json(results)
+        })
     }
 
 
